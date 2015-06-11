@@ -3,7 +3,7 @@ DIRECTORY=/var/www/html/OCR/Out
 
 
 x=1
-for i in $DIRECTORY/q*.tif; do
+for i in $DIRECTORY/*_q_*.tif; do
     # Process $i
 	#echo "converting $i to "
 	#echo "$i" | tr  q p
