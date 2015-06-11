@@ -1,0 +1,220 @@
+<html>
+
+<head>
+<style type="text/css">
+#wrap {
+   width:600px;
+   margin:0 auto;
+   padding-top:28px;
+}
+#left_col {
+   float:left;
+   width:300px;
+   padding-right:16px;
+}
+#right_col {
+   float:right;
+   width:300px;
+}
+</style>
+<script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+<script>
+$(document).ready(function(){
+
+     $('#orderModal').modal({
+        keyboard: true,
+        backdrop: "static",
+        show: false,
+
+    }).on('show', function () {
+
+    });
+   $( document ).delegate( "#records_table tr", "click", function() {
+	$('.modal-body').html($('<b> Foo: ' + $(this).find( ".dt" ).html() + '</b>'));
+	$('#largeModal').modal('show');
+    });//button
+
+
+   
+  
+  $("#button").click(function(){
+  
+	
+    $.getJSON("Process.php", function (data) {
+	var trHTML = '';
+    	$.each(data, function (i, item) {
+
+    trHTML += '<tr data-id="'+ item.content + '" id= \'' + item.content  + '\' data-text="'+ item.html+ '" ><td>Log</td><td>' + item.rank + '</td><td id= \'r_' + item.content  + '\'>' + item.content + '</td><td id= \'s_' + item.content  + '\'>' + '' + '</td><td id= \'t_' + item.content  + '\'>' + item.UID + '</td> <td class="dt" style="display:none">' +  'aaa' + '</td> <td><a target="_blank" href="./Preview/' +   item.content  + '.png"> Line File </a></td></a></td><td><a target="_blank" href="./Origs/' +   item.content  + '.mvg"> Data File </a></td></tr>';
+    	});
+	$('#records_table').append(trHTML);
+	$('#blist').append("<li><a href=\"#\" id=\"run\" class=\"btn btn-lg btn-primary\">Run</a></li>" );
+                   
+});
+
+
+  });//button
+
+
+
+	$( document ).delegate( "#run", "click", function() {
+		 $('#status').text("Processsing");
+		 x=0;
+		  $('#records_table tr').each(function() {
+				var s_str= "Chop.php?file=" + $(this).attr('id')+".JPG"+"&page="+x;
+				var sel ="#r_" + $(this).attr('id');
+				var sel2 ="#s_" + $(this).attr('id');
+				var sel3 ="#" + $(this).attr('id');
+				x++;
+                                var row= $(this);
+				$.getJSON(s_str, function (data) {
+						
+					$(sel).text("Fields="+ data.fields);
+					$(this).data('foo', "new value");
+					$(this).attr("data-text", data.html);
+					row.find( ".dt" ).html(data.html) ;
+					$(sel2).text("Records="+ data.records);
+					$(sel3).css("background-color", "#550055");
+					$(sel3).css("color", "#eeeeee");
+					$('#status').text("Split:" + data.records);
+
+  
+				});
+
+		});
+		$('#status').text("Finished Send");
+		$('#blist').append("<li><a href=\"#\" id=\"lines\" class=\"btn btn-lg btn-primary\">Remove Lines</a></li>" );
+
+	});
+	
+	$( document ).delegate( "#lines", "click", function() {
+		 $('#status').text("Line Removal Start");
+		 x=0;
+		 var s_str= "RemoveLines.php?file=" + $(this).attr('id')+"&page="+x;
+		 $.getJSON(s_str, function (data) {
+						
+
+					$('#status').text("Removed Lines:" +data.count);
+  
+				});
+		$('#blist').append("<li><a href=\"#\" id=\"d2\" class=\"btn btn-lg btn-primary\">Deskew</a></li>" );
+
+	});
+	
+
+	$( document ).delegate( "#d2", "click", function() {
+		 $('#status').text("Deskew Start");
+		 x=0;
+		 var s_str= "Deskew.php?file=" + $(this).attr('id')+"&page="+x;
+		 $.getJSON(s_str, function (data) {
+						
+
+					$('#status').text("Deskewed:" +data.count);
+  
+				});
+		$('#blist').append("<li><a href=\"#\" id=\"ocr\" class=\"btn btn-lg btn-primary\">OCR</a></li>" );
+
+	});
+	
+	$( document ).delegate( "#ocr", "click", function() {
+		 $('#status').text("OCR Start");
+		 x=0;
+		  $('#records_table tr').each(function() {
+				var s_str= "Ocr.php?file=" + $(this).attr('id')+"&page="+x;
+				var sel ="#r_" + $(this).attr('id');
+				var sel2 ="#s_" + $(this).attr('id');
+				var sel3 ="#" + $(this).attr('id');
+				x++;
+                                var row= $(this);
+				$.getJSON(s_str, function (data) {
+						
+					$(sel).text("Fields="+ data.fields);
+					$(sel3).css("background-color", "brown");
+					$(sel3).css("color", "#eeeeee");
+					row.find( ".dt" ).html(data.html) ;
+					$('#status').text("OCR:" +data.count);
+  
+				});
+
+		});
+		$('#status').text("Finished OCR");
+		$('#blist').append("<li><a href=\"#\" id=\"todb\" class=\"btn btn-lg btn-primary\">Send To DB</a></li>" );
+
+	});
+
+	$( document ).delegate( "#todb", "click", function() {
+		 $('#status').text("OCR Start");
+		 x=0;
+		  $('#records_table tr').each(function() {
+				var s_str= "ToDB.php?file=" + $(this).attr('id')+"&page="+x;
+				var sel ="#r_" + $(this).attr('id');
+				var sel2 ="#s_" + $(this).attr('id');
+				var sel3 ="#" + $(this).attr('id');
+				x++;
+                                var row= $(this);
+				$.getJSON(s_str, function (data) {
+						
+					$(sel).text("Fields="+ data.fields);
+					$(sel3).css("background-color", "yellow");
+					$(sel3).css("color", "#eeeeee");
+					row.find( ".dt" ).html(data.html) ;
+					$('#status').text("DB:" + data.count);
+  
+				});
+
+		});
+		$('#status').text("Finished DB");
+
+	});
+});//ready
+
+
+
+</script>
+
+</head>
+<body>
+<div id="wrap">
+    <div id="left_col">
+	<div class="alert alert-warning fade in" id="status">Ready</div><BR>
+        <ul id="blist">
+        <li >
+			 <a href="#" id="button" class="btn btn-lg btn-primary">Load</a>
+        </li>
+        </ul>
+	
+    </div>
+    <div id="right_col">
+       <table  class="table table-striped" id="records_table" border='1'>
+</table>
+    </div>
+</div>
+
+
+<div class="modal fade" id="largeModal" tabindex="-1" role="dialog" aria-labelledby="largeModal" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">Large Modal</h4>
+      </div>
+      <div class="modal-body">
+        <h3>Modal Body</h3>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+</body>
+</html>
