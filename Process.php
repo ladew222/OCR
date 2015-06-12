@@ -4,6 +4,13 @@ $dir='/var/www/html/OCR/Origs/';
 $files = scandir($dir);
 $x=0;
 $arr = array();
+$servername = "localhost";
+$username = "root";
+$password = "gopre222";
+$dbname = "people";
+
+
+
 foreach($files as $file) {
   //do your work here
  $parts = explode(".", $file);

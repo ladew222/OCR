@@ -18,7 +18,7 @@ class MyLine
   public $y_start=0;
   public $x_end=0;
   public $y_end=0;
-  
+
   function __construct($x1,$y1,$x2,$y2) {
      // Statements here run every time
      // an instance of the class
@@ -146,6 +146,12 @@ function get_vert_box($arr_val,$height){
 
 
 function split_file($file,$page) {
+
+    $servername = "localhost";
+    $username = "root";
+    $password = "gopre222";
+    $dbname = "people";
+
         $arr_lines = array();
         $arr_lines_vert = array();
         $fn_arr = explode(".", $file, 2);
@@ -284,7 +290,19 @@ function split_file($file,$page) {
                         $html.= ( $new_file);
                         $html.= ("<BR>");
                         $html.= ("convert -crop " .$str_crop  . " " .$file . $outdir . $new_file);
-                        $x++; //field count
+
+                        $sql = "INSERT INTO item (page_num,page_letter,page_name,rec_type, text,row_origin,col_origin) VALUES ('$page', 'A', '$fname2','$type','',$x,$xx)";
+
+                        $conn = new mysqli($servername, $username, $password, $dbname);
+                        // Check connection
+                           $html.="<BR>  added to DB: $sql" . "<br> ";
+
+                       if ($conn->query($sql) === TRUE) {
+                            //
+                        } else {
+                            $html.= "Error: " . $sql . "<br>" . $conn->error;
+                        }
+                       $x++; //field count
                         
                 }
                 $xx++; //rec count

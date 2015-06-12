@@ -126,15 +126,14 @@ $(document).ready(function(){
 		 $('#status').text("OCR Start");
 		 x=0;
 		  $('#records_table tr').each(function() {
-				var s_str= "Ocr.php?file=" + $(this).attr('id')+"&page="+x;
+				var s_str= "Ocr2.php?file=" + $(this).attr('id')+"&page="+x;
 				var sel ="#r_" + $(this).attr('id');
 				var sel2 ="#s_" + $(this).attr('id');
 				var sel3 ="#" + $(this).attr('id');
 				x++;
                                 var row= $(this);
 				$.getJSON(s_str, function (data) {
-						
-					$(sel).text("Fields="+ data.fields);
+
 					$(sel3).css("background-color", "brown");
 					$(sel3).css("color", "#eeeeee");
 					row.find( ".dt" ).html(data.html) ;
