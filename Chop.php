@@ -54,6 +54,35 @@ class MyLine
 }
 
 
+function find_intercept($l1,$l2){
+
+        $A1 = $l1->y_end - $l1->y_start; //y2-y1
+        $B1 = $l1->x_start - $l1->x_end;  //x1-x2
+        $C1 =  $A1 * $l1->x_start +  $B1 * $l1->y_start; //A*x1+B*y1
+
+        $A2 = $l2->y_end - $l2->y_start; //y2-y1
+        $B2 = $l2->x_start - $l2->x_end;  //x1-x2
+        $C2 =  $A2 * $l2->x_start +  $B2 * $l2->y_start; //A*x1+B*y1
+
+
+        $det = $A1*$B2 - $A2*$B1
+            if($det == 0){
+                //Lines are parallel
+                        $x=0;
+                        $y=0;
+            }else{
+                $x = ($B2*$C1 - $B1*$C2)/$det
+                $y = ($A1*$C2 - $A2*$C1)/$det
+            }
+                $res = array(
+                    "x" => $x,
+                    "y" => $y,
+                );
+
+                return $res;
+}
+
+
 function get_horiz_box($arr_val,$height){
         
     $pairs = array();
@@ -70,11 +99,11 @@ function get_horiz_box($arr_val,$height){
                         //print_r($value);
                         if (($value->y_start - $prev_val->y_start)>130){//create a pair
                                 $GLOBALS["html"].= "<b style='color:blue'>Making Pair:</b>";
-				$GLOBALS["html"].= print_r($prev_val, true);
+				                $GLOBALS["html"].= print_r($prev_val, true);
                                 $GLOBALS["html"].= ("::to::");
-                                $GLOBALS["html"].= print_r($prev_val, true);
+                                $GLOBALS["html"].= print_r($value, true);
                                 $GLOBALS["html"].=("<br>");
-                            array_push($pairs, array($prev_val,$value));
+                                array_push($pairs, array($prev_val,$value));
                         }
 			else{
 			}
@@ -248,8 +277,9 @@ function split_file($file,$page) {
         $html.= ("<b style='color:green'><BR>Start Creating</b><BR>");
         foreach ($h_boxes as $value) {
                 $x=0;
-                $html.= "<BR><b style='color:yellow'> Outputing Row" .$x . "</b><BR>";
+
                 foreach ($v_boxes as $value_f) {
+                         $html.= "<BR><b style='color:yellow'> Outputing Row" .$xx . "</b><BR>";
                         $html.=("<BR>looking at vert pair");
 			$html.= print_r($value_f, true);
                         $html.=("<BR>");
@@ -259,6 +289,12 @@ function split_file($file,$page) {
                         $start_x=$value_f[0]->x_start;
                         $start_y=$value[0]->y_start;
                         $width= $value_f[1]->x_start - $value_f[0]->x_start;
+                        if ($value[1]->y_start > $value[1]->y_end ){ //find which y is greater and use
+                             $height=$value[1]->y_start - $value[0]->y_start;
+                        }
+                        else{
+                            $height=$value[1]->y_end - $value[0]->y_end;
+                        }
                         $height=$value[1]->y_start - $value[0]->y_start;
                         //do adjusting for buffers
                         if($x==1){//amount move left a bit for safety
@@ -266,23 +302,27 @@ function split_file($file,$page) {
                                 $width=$width+30;
                         }
 			//adjust for all
-			$height+=50;
-			$start_y+=50;
+			//$height-=30;
+			//$start_y+=50;
+
 
 
 			if($x==0){//add a little height
                                 
                               // $height+=12;
                         }
-                        
+
 
                         $type="p";
                         if($x==1){ //for line removal
 							$type="q";
 						}
                         $str_crop =  $width . "x" . $height . "+" . $start_x . "+" . $start_y;
-                        $new_file = $fname2 ."_". $type . "_" . $page . "_" . $xx . "_" . $x . ".tif"; 
+                        $new_file = $fname2 ."_". $type . "_" . $page . "_" . $x . "_" . $xx . ".jpg";
                         $lastline = exec("convert -crop " .$str_crop  . " " .$file . $outdir . $new_file);
+                        $path_parts = pathinfo($new_file);
+                        $sfile= "http://localhost/OCR/Out/". $path_parts['basename'];
+                         $sfile2= "http://localhost/OCR/Preview/".  $fname2 .".png";
                         $html.= "<b style='color:brown'> Outputting Field" .$x . "</b><Br>";
                         $html.= ("Set Crop:". $str_crop);
                         $html.= ("<BR>");
@@ -291,7 +331,7 @@ function split_file($file,$page) {
                         $html.= ("<BR>");
                         $html.= ("convert -crop " .$str_crop  . " " .$file . $outdir . $new_file);
 
-                        $sql = "INSERT INTO item (page_num,page_letter,page_name,rec_type, text,row_origin,col_origin) VALUES ('$page', 'A', '$fname2','$type','',$x,$xx)";
+                        $sql = "INSERT INTO item (page_num,page_letter,page_name,rec_type, text,row_origin,col_origin,file,file_line) VALUES ('$page', 'A', '$fname2','$type','',$xx,$x,'$sfile', '$sfile2')";
 
                         $conn = new mysqli($servername, $username, $password, $dbname);
                         // Check connection
