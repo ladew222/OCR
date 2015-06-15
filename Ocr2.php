@@ -24,7 +24,7 @@ while ((($row = $result->fetch_assoc()) !== null)  && $x<45  ) {
     $without= "/var/www/html/OCR/Text/" . $shf;
 
     if ($row["rec_type"]=="q") {
-        $lastline = exec("tesseract " .$file  . " " . $without . "nobatch smdigits");
+        $lastline = exec("tesseract " .$file  . " " . $without . " nobatch smdigits");
 
     }
     else{
