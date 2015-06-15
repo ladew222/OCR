@@ -103,19 +103,19 @@ $(document).ready(function(){
 					$('#status').text("Removed Lines:" +data.count);
   
 				});
-		$('#blist').append("<li><a href=\"#\" id=\"d2\" class=\"btn btn-lg btn-primary\">Deskew</a></li>" );
+		$('#blist').append("<li><a href=\"#\" id=\"d2\" class=\"btn btn-lg btn-primary\">Make Tif</a></li>" );
 
 	});
 	
 
 	$( document ).delegate( "#d2", "click", function() {
-		 $('#status').text("Deskew Start");
+		 $('#status').text("Loading Tif Dir");
 		 x=0;
-		 var s_str= "Deskew.php?file=" + $(this).attr('id')+"&page="+x;
+		 var s_str= "MakeTif.php?file=" + $(this).attr('id')+"&page="+x;
 		 $.getJSON(s_str, function (data) {
 						
 
-					$('#status').text("Deskewed:" +data.count);
+					$('#status').text("Tiffs:" +data.count);
   
 				});
 		$('#blist').append("<li><a href=\"#\" id=\"ocr\" class=\"btn btn-lg btn-primary\">OCR</a></li>" );

@@ -291,6 +291,7 @@ function split_file($file,$page) {
         $x=0;//field count
         $xx=0; //row count
         $outdir=" /var/www/html/OCR/Out/";
+        $outdir2=" /var/www/html/OCR/Tif/";
         $html.= ("<b style='color:green'><BR>Start Creating</b><BR>");
         foreach ($h_boxes as $value) {  //value is row
                 $x=0;
@@ -342,6 +343,7 @@ function split_file($file,$page) {
 						}
                         $str_crop =  $width . "x" . $height . "+" . $start_x . "+" . $start_y;
                         $new_file = $fname2 ."_". $type . "_" . $page . "_" . $x . "_" . $xx . ".jpg";
+                         $new_file2 = $fname2 ."_". $type . "_" . $page . "_" . $x . "_" . $xx . ".tif";
                         $lastline = exec("convert -crop " .$str_crop  . " " .$file . $outdir . $new_file);
                         $path_parts = pathinfo($new_file);
                         $sfile= "http://localhost/OCR/Out/". $path_parts['basename'];
@@ -353,6 +355,7 @@ function split_file($file,$page) {
                         $html.= ( $new_file);
                         $html.= ("<BR>");
                         $html.= ("convert -crop " .$str_crop  . " " .$file . $outdir . $new_file);
+                      $lastline = exec("convert -crop " .$str_crop  . " " .$file . $outdir2 . $new_file2);
 
                         $sql = "INSERT INTO item (page_num,page_letter,page_name,rec_type, text,row_origin,col_origin,file,file_line) VALUES ('$page', 'A', '$fname2','$type','',$xx,$x,'$sfile', '$sfile2')";
 
