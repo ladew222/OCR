@@ -4,7 +4,7 @@ DIRECTORY=/var/www/html/OCR/Out
 
 
 
-FILES=/var/www/html/OCR/Out/*.tif
+FILES=/var/www/html/OCR/Out/*.jpg
 x=1;
 for f in $FILES
 do

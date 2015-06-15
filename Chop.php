@@ -318,7 +318,7 @@ function split_file($file,$page) {
                         else{
                             $height=$value[1]->y_end - $value[0]->y_end;
                         }
-                        $height=$value[1]->y_start - $value[0]->y_start;
+
                         //do adjusting for buffers
                         if($x==1){//amount move left a bit for safety
                                 $start_x=$start_x -30;
