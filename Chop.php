@@ -60,19 +60,28 @@ function find_intercept($l1,$l2){
         $B1 = $l1->x_start - $l1->x_end;  //x1-x2
         $C1 =  $A1 * $l1->x_start +  $B1 * $l1->y_start; //A*x1+B*y1
 
+  //      echo "A1:" . $A1 . "<BR>";
+   //     echo "B1:" . $B1 . "<BR>";
+  //      echo "C1:" . $C1 . "<BR>";
+
         $A2 = $l2->y_end - $l2->y_start; //y2-y1
         $B2 = $l2->x_start - $l2->x_end;  //x1-x2
         $C2 =  $A2 * $l2->x_start +  $B2 * $l2->y_start; //A*x1+B*y1
 
+     //    echo "A2:" . $A2 . "<BR>";
+      //   echo "B2:" . $B2 . "<BR>";
+       //  echo "C2:" . $C2 . "<BR>";
 
-        $det = $A1*$B2 - $A2*$B1
+        $det = $A1*$B2 - $A2*$B1;
+
+  //      echo "<BR>DEt:" . $det . "<BR>";
             if($det == 0){
                 //Lines are parallel
                         $x=0;
                         $y=0;
             }else{
-                $x = ($B2*$C1 - $B1*$C2)/$det
-                $y = ($A1*$C2 - $A2*$C1)/$det
+                $x = ($B2*$C1 - $B1*$C2)/$det;
+                $y = ($A1*$C2 - $A2*$C1)/$det;
             }
                 $res = array(
                     "x" => $x,
@@ -211,7 +220,7 @@ function split_file($file,$page) {
                         
                         if($line_num>1){//put into array
                                 //grab firs value
-                                //$html.= "Read line $line<BR>";
+                                $html.= "Read line $line<BR>";
                                 $line = substr($line, 5);  //remove begining
                                 $string_arr = explode('#', $line);
                                 $string_main = $string_arr[0]; //get before #
@@ -226,14 +235,18 @@ function split_file($file,$page) {
                                 $x2=$ends[0];
                                 $y2=$ends[1];
                                 //$html.= ("Ind Vals:" .$x1 . "::" . $y1. "<BR>");
+                                $html.="<BR>----------Current Line------------<BR>";
+                                $html.= print_r($starts,true);
+                                $html.= print_r($ends,true);
+
                                 if($x1>100 || $y1>100){
                                         
                                         $html.= ("adding val");
                                         if($x1>0){// verticals
-                                                array_push($arr_lines_vert, new MyLine($x1,$y1,$x2,$y1));
+                                                array_push($arr_lines_vert, new MyLine($x1,$y1,$x2,$y2));
                                         }
                                         else{
-                                                array_push($arr_lines, new MyLine($x1,$y1,$x2,$y1));
+                                                array_push($arr_lines, new MyLine($x1,$y1,$x2,$y2));
                                                 ///add value
                                         }
                                         
@@ -257,9 +270,13 @@ function split_file($file,$page) {
         //print_r($arr);
         //usort($arr_lines, 'sort_objects_by_x');
         //usort($arr_lines, array("MyLine", "cmp_obj"));
-        $html.= "Sorted<BR>";
-	$html.= print_r($arr_lines, true);
+        $html.= "Added Horizontals:<BR>";
+	    $html.= print_r($arr_lines, true);
         $html.=("<br>");
+        $html.= "Added Verticals:<BR>";
+        $html.= print_r($arr_lines_vert, true);
+        $html.=("<br>");
+
         $h_boxes=get_horiz_box($arr_lines,$file_h);
 	$html.= $GLOBALS["html"];
         usort($arr_lines_vert, array("MyLine", "cmp_obj")); //not sorted ahead of time
@@ -268,26 +285,32 @@ function split_file($file,$page) {
         $v_boxes=get_vert_box($arr_lines_vert);
         $html.= $GLOBALS["html"];
         
-        $html.= "<h2>Got Vertical</h2>";
+
 
 	$html.= print_r($v_boxes, true);
-        $x=0;
-        $xx=0;
+        $x=0;//field count
+        $xx=0; //row count
         $outdir=" /var/www/html/OCR/Out/";
         $html.= ("<b style='color:green'><BR>Start Creating</b><BR>");
-        foreach ($h_boxes as $value) {
+        foreach ($h_boxes as $value) {  //value is row
                 $x=0;
-
-                foreach ($v_boxes as $value_f) {
-                         $html.= "<BR><b style='color:yellow'> Outputing Row" .$xx . "</b><BR>";
-                        $html.=("<BR>looking at vert pair");
-			$html.= print_r($value_f, true);
-                        $html.=("<BR>");
-                        
-                        
-                        
-                        $start_x=$value_f[0]->x_start;
-                        $start_y=$value[0]->y_start;
+                $html.= "<BR><BR><b style='color:purple'> Starting Row:" .$xx . "</b><BR>";
+                foreach ($v_boxes as $value_f) {///grab each box pair
+                        //col
+                        // $html.= "<BR><BR><b style='color:purple'> Outputing Row:" .$xx . "</b><BR>";
+			            $html.= print_r($value_f, true);
+                        $html.=("<BR> <b style='color:pink'> Row Box:</b>");
+                        $html.=print_r($value,true);
+                       $html.=("<BR> <b style='color:pink'>  Col Box:</b>");
+                        $html.=print_r($value_f,true);
+                        $upper_left=find_intercept($value[0],$value_f[0]);
+                        $html.="<BR><b style='color:green'>Got intercept</b><BR>";
+                         $html.= $upper_left["x"] . " :: ". $upper_left["y"];
+                         $html.= print_r($upper_left,true);
+                       // $start_x=$value_f[0]->x_start;
+                        //$start_y=$value[0]->y_start;
+                        $start_x = $upper_left["x"];
+                        $start_y = $upper_left["y"];
                         $width= $value_f[1]->x_start - $value_f[0]->x_start;
                         if ($value[1]->y_start > $value[1]->y_end ){ //find which y is greater and use
                              $height=$value[1]->y_start - $value[0]->y_start;
