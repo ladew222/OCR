@@ -122,8 +122,8 @@ function get_horiz_box($arr_val,$height){
                 $prev_val = $value;
                 
         }
-        
-        
+        //need to add one more at end
+        array_push($pairs, array($prev_val,new MyLine(0,$prev_val->x_start+1000,$prev_val->x_end,$prev_val->y_end+1000)));
         //return
         return $pairs;
 }
