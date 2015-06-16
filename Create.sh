@@ -8,7 +8,7 @@ do
   
   s=${f##*/}
   t=${s%%.*}
-  u="_prev.png"
+  u=".png"
   uu=".mvg"
   uuu="_canny.png"
   uuuu="_lines.png"
@@ -28,7 +28,7 @@ do
 
 convert $f  -canny 0x1+10%+40% -hough-lines 119x119+290 /var/www/html/OCR/Origs/$w
 
-convert $f  -rotate "-90>" -colorspace Gray -deskew 40 /var/www/html/OCR/Origs/$z
+convert $f  -rotate "90>" -colorspace Gray -deskew 40 /var/www/html/OCR/Origs/$z
 ##prep for ocr
 done
 
