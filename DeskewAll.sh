@@ -16,7 +16,7 @@ if [[ $FILES == *"q"* ]]
    t=${s%%.*}
    u=".tif"
    v=$t$u
-   convert $f  -deskew 40  /var/www/html/OCR/NoLines/$v
+   #convert $f  -deskew 40  /var/www/html/OCR/NoLines/$v
    echo "convert  $f  /var/www/html/OCR/NoLines/$v"
    sleep 1
  fi
