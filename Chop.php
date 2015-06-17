@@ -361,7 +361,7 @@ function split_file($file,$page) {
                       $lastline = exec("convert -crop " .$str_crop  . " " .$file . $outdir2 . $new_file2);
                         if($x==1){ //for line removal
                             $type="q";
-                            $lastline = exec("convert $i -morphology close:1 \"1x9:0,1,1,1,1,1,1,1,0\" \"$i\" | tr  q p");
+                            //$lastline = exec("convert $i -morphology close:1 \"1x9:0,1,1,1,1,1,1,1,0\" \"$i\" | tr  q p");
                         }
 
                         $sql = "INSERT INTO item (page_num,page_letter,page_name,rec_type, text,row_origin,col_origin,file,file_line) VALUES ('$page', 'A', '$fname2','$type','',$xx,$x,'$sfile', '$sfile2')";
