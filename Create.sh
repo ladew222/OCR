@@ -24,11 +24,11 @@ do
   echo "Creating $x"
   echo "And $y"
   #c = $nf$ext
- convert $f \( +clone -canny 0x1+10%+40% -write /var/www/html/OCR/Preview/$x -background none -fill red -stroke red -strokewidth 2 -hough-lines 119x119+290 -write /var/www/html/OCR/Preview/$y \) -composite /var/www/html/OCR/Preview/$v
+ convert $f -rotate "-90>" \( +clone -canny 0x1+10%+40%  -rotate "-90>" -write /var/www/html/OCR/Preview/$x -background none -fill red -stroke red -strokewidth 2 -hough-lines 119x119+290 -write /var/www/html/OCR/Preview/$y \) -composite /var/www/html/OCR/Preview/$v
 
-convert $f  -canny 0x1+10%+40% -hough-lines 119x119+290 /var/www/html/OCR/Origs/$w
+convert $f  -rotate "-90>" -canny 0x1+10%+40% -hough-lines 119x119+290 /var/www/html/OCR/Origs/$w
 
-convert $f  -rotate "90>" -colorspace Gray /var/www/html/OCR/Origs/$z
+convert $f  -rotate "-90>" -colorspace Gray /var/www/html/OCR/Origs/$z
 ##prep for ocr
 done
 
