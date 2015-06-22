@@ -35,4 +35,32 @@ function str_to_address($context) {
 }
 
 
+function str_to_address2($context) {
+    $array = explode("/n", $context);
+    $array_reversed = array_reverse($array);
+    $numKey = "";
+    $zipKey = "";
+    foreach($array_reversed as $k=>$str) {
+        foreach($array_reversed as $k=>$str) {
+                if($zipKey) { continue; }
+                if(strlen($str)===5 && is_numeric($str)) {
+                    $zipKey = $k;
+                    //found zip
+
+                }
+    }
+    $array_reversed = array_slice($array_reversed, $zipKey);
+    $array = array_reverse($array_reversed);
+    foreach($array as $k=>$str) {
+        if($numKey) { continue; }
+        if(strlen($str)>1 && strlen($str)<6 && is_numeric($str)) {
+            $numKey = $k;
+        }
+
+    }
+    $array = array_slice($array, $numKey);
+    $string = implode(' ', $array);
+    return $string;
+}
+
 ?>
