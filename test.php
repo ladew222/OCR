@@ -40,14 +40,22 @@ function str_to_address2($context) {
     $array_reversed = array_reverse($array);
     $numKey = "";
     $zipKey = "";
+    $x=0;
     foreach($array_reversed as $k=>$str) {
+        $xx=0;
         foreach($array_reversed as $k=>$str) {
-                if($zipKey) { continue; }
-                if(strlen($str)===5 && is_numeric($str)) {
-                    $zipKey = $k;
-                    //found zip
-
-                }
+            if ($zipKey) {
+                continue;
+            }
+            if (strlen($str) === 5 && is_numeric($str)) {
+                $zipKey = $k;
+                //found zip
+                $foundzipline = $x;
+                $xx++;
+            }
+            $xx++;
+        }
+     $x++;
     }
     $array_reversed = array_slice($array_reversed, $zipKey);
     $array = array_reverse($array_reversed);

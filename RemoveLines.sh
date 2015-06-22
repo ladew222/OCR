@@ -9,10 +9,9 @@ for i in $DIRECTORY/*; do
 	#echo "$i" | tr  q p
 	x=$((x+1))
 	if [[ $i =~ [q] ]]; then
-    echo "$i is a digit"
+   # echo "$i is a digit"
          convert $i -morphology close:1 "1x7:0,1,1,1,1,1,0" "$i" | tr  q p
-    else
-        echo "oops"
+
     fi
 
 done
