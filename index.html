@@ -66,13 +66,14 @@ $(document).ready(function(){
 	$( document ).delegate( "#run", "click", function() {
 		 $('#status').text("Processsing");
 		 x=0;
+          var subdir= $('#letter').val();
 		  $('#records_table tr').each(function() {
-				var s_str= "Chop.php?file=" + $(this).attr('id')+".JPG"+"&page="+x;
+				var s_str= "Chop.php?file=" + $(this).attr('id')+".JPG"+"&page="+x +"&subdir="+ subdir;
 				var sel ="#r_" + $(this).attr('id');
 				var sel2 ="#s_" + $(this).attr('id');
 				var sel3 ="#" + $(this).attr('id');
 				x++;
-                                var row= $(this);
+                var row= $(this);
 				$.getJSON(s_str, function (data) {
 						
 					$(sel).text("Fields="+ data.fields);
@@ -182,6 +183,9 @@ $(document).ready(function(){
 <div id="wrap">
     <div id="left_col">
 	<div class="alert alert-warning fade in" id="status">Ready</div><BR>
+        <input type="text" id="letter" placeholder="letter " size="8">
+        <BR>
+        <BR>
         <ul id="blist">
         <li >
 			 <a href="#" id="button" class="btn btn-lg btn-primary">Load</a>

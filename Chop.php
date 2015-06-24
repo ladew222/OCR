@@ -6,6 +6,8 @@ convert /var/www/html/OCR/Origs/101_4562.JPG \( +clone -canny 0x1+10%+40% -write
 convert /var/www/html/OCR/Origs/101_4561.JPG  -deskew 40 -canny 0x1+10%+40% -hough-lines 119x119+310 /var/www/html/OCR/Origs/d.mvg
 
 
+after done
+jhead -norot *.JPG
 
 */
 
@@ -183,7 +185,7 @@ function get_vert_box($arr_val,$height){
 
 
 
-function split_file($file,$page) {
+function split_file($file,$page,$subdir) {
 
     $servername = "localhost";
     $username = "root";
@@ -198,8 +200,10 @@ function split_file($file,$page) {
         $data_f= $fname . ".mvg";
         $file_w=0;
         $file_h=0;
-	$fname2= basename("$file", ".JPG");
-        
+        $fname2= basename("$file", ".JPG");
+
+        $subdir =  $subdir . "/";
+
         $html.= "about to read".$data_f ."<br>";
         $all_lines = array();
         //read values in
@@ -347,9 +351,9 @@ function split_file($file,$page) {
                         $str_crop =  $width . "x" . $height . "+" . $start_x . "+" . $start_y;
                         $new_file = $fname2 ."_". $type . "_" . $page . "_" . $x . "_" . $xx . ".jpg";
                          $new_file2 = $fname2 ."_". $type . "_" . $page . "_" . $x . "_" . $xx . ".tif";
-                        $lastline = exec("convert -crop " .$str_crop  . " " .$file . $outdir . $new_file);
+                        $lastline = exec("convert -crop " .$str_crop  . " " .$file . $outdir . $subdir. $new_file);
                         $path_parts = pathinfo($new_file);
-                        $sfile= "http://localhost/OCR/Out/". $path_parts['basename'];
+                        $sfile= "http://localhost/OCR/Out/". $subdir . $path_parts['basename'];
                          $sfile2= "http://localhost/OCR/Preview/".  $fname2 .".png";
                         $html.= "<b style='color:brown'> Outputting Field" .$x . "</b><Br>";
                         $html.= ("Set Crop:". $str_crop);
@@ -357,8 +361,8 @@ function split_file($file,$page) {
                         $html.= ("creating file:");
                         $html.= ( $new_file);
                         $html.= ("<BR>");
-                        $html.= ("convert -crop " .$str_crop  . " " .$file . $outdir . $new_file);
-                      $lastline = exec("convert -crop " .$str_crop  . " " .$file . $outdir2 . $new_file2);
+                        $html.= ("convert -crop " .$str_crop  . " " .$file . $outdir . $subdir. $new_file);
+                      $lastline = exec("convert -crop " .$str_crop  . " " .$file . $outdir2 . $subdir. $new_file2);
                         if($x==1){ //for line removal
                             $type="q";
                             //$lastline = exec("convert $i -morphology close:1 \"1x9:0,1,1,1,1,1,1,1,0\" \"$i\" | tr  q p");
@@ -390,7 +394,7 @@ $html.= "start";
 $sourcedir="/var/www/html/OCR/Origs/";
 $outdir=" /var/www/html/OCR/Out/";
 if (isset($_GET['file'])) {
-  $res= split_file($sourcedir . $_GET['file'] ,$_GET['page']);
+  $res= split_file($sourcedir . $_GET['file'] ,$_GET['page'],$_GET['subdir'] );
   echo($res);
 }else{
     // Fallback behaviour goes here
