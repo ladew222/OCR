@@ -353,8 +353,8 @@ function split_file($file,$page,$subdir) {
                          $new_file2 = $fname2 ."_". $type . "_" . $page . "_" . $x . "_" . $xx . ".tif";
                         $lastline = exec("convert -crop " .$str_crop  . " " .$file . $outdir . $subdir. $new_file);
                         $path_parts = pathinfo($new_file);
-                        $sfile= "http://localhost/OCR/Out/". $subdir . $path_parts['basename'];
-                         $sfile2= "http://localhost/OCR/Preview/".  $fname2 .".png";
+                        $sfile= "/OCR/Out/". $subdir . $path_parts['basename'];
+                         $sfile2= "/OCR/Preview/".  $fname2 .".png";
                         $html.= "<b style='color:brown'> Outputting Field" .$x . "</b><Br>";
                         $html.= ("Set Crop:". $str_crop);
                         $html.= ("<BR>");

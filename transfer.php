@@ -71,9 +71,17 @@ function str_to_address2($context) {
 
 
                 $newstr= "".   $array_reversed[$x+3] . "". "". $array_reversed[$x+2] ."". $array_reversed[$x+1] . "". $array_reversed[$x];
+                $array = array(
+                    "name" => $array_reversed[$x+3] . $array_reversed[$x+2] ,
+                    "address" => $array_reversed[$x+1],
+                    "city" => $array_reversed[$x],
+                    "all" => $newstr,
+                );
+
                 echo("<BR><div style='color:green'>" .$newstr ."</div><BR>");
-                print_r($array_reversed);
-                return($newstr);
+               // print_r($array_reversed);
+                print_r($array);
+                return($array);
                 $xx++;
             }
             $xx++;
@@ -81,7 +89,7 @@ function str_to_address2($context) {
      $x++;
     }
 
-    return $newstr;
+    return $array;
 }
 
 
@@ -132,12 +140,23 @@ if ($result = mysqli_query($link, $query)) {
             $addr_img="";
             $amt="";
             $amt_img="";
+            $pname="";
+            $ad="";
+            $city="";
+
             while ($row2 = mysqli_fetch_assoc($res2)){
                 echo("<BR><div style='color:orange'>Getting Column" . $row2["col_origin"] . "</div><BR>");
                 echo("looking at:" .  $row2["col_origin"]. "QQQ:".  $query2.": ".  "<BR>");
                 if( ($row2["col_origin"]) == '0' ){
-                    $addr=$row2["text"];
-                    $addr_parsed=str_to_address2($row2["text"]);
+                    $addr= mysql_escape_string($row2["text"]);
+                    $addr_par=str_to_address2($row2["text"]);
+                    $addr_parsed= $addr_par['all'];
+                    $pname=$addr_par['name'];
+                    $ad=$addr_par['address'];
+                    $city=$addr_par['city'];
+                    echo("<div style='color:blue'> zip: " . $city ."</div>.");
+
+
                     $addr_img=$row2["file"];
                     echo("<div style='color:brown'> found address: " . $row2["text"]. "file:" . $row2["file"] ."</div>.");
                 }
@@ -150,7 +169,8 @@ if ($result = mysqli_query($link, $query)) {
                 $fline = $row2["file_line"];
                 $name=$row["page_name"];
             }
-            $sql = ("INSERT INTO `people`.`full` (`ID`, `page_letter`, `page_name`, `page_num`, `address`, `amt`, `address_img`, `amt_img`, `address_orig`) VALUES ('', '$page_letter', '$name', '0', '$addr_parsed', ' $amt', '$addr_img', '$amt_img', '$addr')");
+
+            $sql = ("INSERT INTO `people`.`full` (`ID`, `page_letter`, `page_name`, `page_num`, `address`, `amt`, `address_img`, `amt_img`, `address_orig`,`name_line`,`address_line`,`citystate_line` ) VALUES ('', '$page_letter', '$name', '0', '$addr_parsed', ' $amt', '$addr_img', '$amt_img', '$addr','$pname','$ad','$city')");
             echo($sql);
             if (mysqli_query($link, $sql) === TRUE) {
                 echo "New record created successfully";
