@@ -201,7 +201,7 @@ function split_file($file,$page,$subdir) {
         $file_w=0;
         $file_h=0;
         $fname2= basename("$file", ".JPG");
-
+        $p_letter= $subdir;
         $subdir =  $subdir . "/";
 
         $html.= "about to read".$data_f ."<br>";
@@ -368,7 +368,7 @@ function split_file($file,$page,$subdir) {
                             //$lastline = exec("convert $i -morphology close:1 \"1x9:0,1,1,1,1,1,1,1,0\" \"$i\" | tr  q p");
                         }
 
-                        $sql = "INSERT INTO item (page_num,page_letter,page_name,rec_type, text,row_origin,col_origin,file,file_line) VALUES ('$page', 'A', '$fname2','$type','',$xx,$x,'$sfile', '$sfile2')";
+                        $sql = "INSERT INTO item (page_num,page_letter,page_name,rec_type, text,row_origin,col_origin,file,file_line) VALUES ('$page', '$p_letter', '$fname2','$type','',$xx,$x,'$sfile', '$sfile2')";
 
                         $conn = new mysqli($servername, $username, $password, $dbname);
                         // Check connection
