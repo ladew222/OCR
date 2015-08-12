@@ -185,19 +185,22 @@ function get_vert_box($arr_val,$height){
 
 
 
-function split_file($file,$page,$subdir) {
+function split_file($file,$page,$subdir,$outstr) {
 
     $servername = "localhost";
     $username = "root";
     $password = "gopre222";
     $dbname = "people";
 
+        $html.= "IN Split";
         $arr_lines = array();
         $arr_lines_vert = array();
         $fn_arr = explode(".", $file, 2);
         $fname = $fn_arr[0];
+        $html.=$outstr;
         $html.= "<br>filename:". $fn_arr[0]. "<BR>";
-        $data_f= $fname . ".mvg";
+        $sub= strtoupper($subdir);
+        $data_f=$fname . ".mvg";
         $file_w=0;
         $file_h=0;
         $fname2= basename("$file", ".JPG");
@@ -205,6 +208,7 @@ function split_file($file,$page,$subdir) {
         $subdir =  $subdir . "/";
 
         $html.= "about to read".$data_f ."<br>";
+        $html.="**********<BR>";
         $all_lines = array();
         //read values in
         $handle = fopen($data_f, "r");
@@ -354,7 +358,7 @@ function split_file($file,$page,$subdir) {
                         $lastline = exec("convert -crop " .$str_crop  . " " .$file . $outdir . $subdir. $new_file);
                         $path_parts = pathinfo($new_file);
                         $sfile= "/OCR/Out/". $subdir . $path_parts['basename'];
-                         $sfile2= "/OCR/Preview/".  $fname2 .".png";
+                         $sfile2= "/OCR/Preview/". $subdir . "/".  $fname2 .".png";
                         $html.= "<b style='color:brown'> Outputting Field" .$x . "</b><Br>";
                         $html.= ("Set Crop:". $str_crop);
                         $html.= ("<BR>");
@@ -362,7 +366,10 @@ function split_file($file,$page,$subdir) {
                         $html.= ( $new_file);
                         $html.= ("<BR>");
                         $html.= ("convert -crop " .$str_crop  . " " .$file . $outdir . $subdir. $new_file);
-                      $lastline = exec("convert -crop " .$str_crop  . " " .$file . $outdir2 . $subdir. $new_file2);
+
+                        if ($_GET['chop']=='1') {
+                            $lastline = exec("convert -crop " . $str_crop . " " . $file . $outdir2 . $subdir . $new_file2);
+                        }
                         if($x==1){ //for line removal
                             $type="q";
                             //$lastline = exec("convert $i -morphology close:1 \"1x9:0,1,1,1,1,1,1,1,0\" \"$i\" | tr  q p");
@@ -389,9 +396,10 @@ function split_file($file,$page,$subdir) {
 	return json_encode($obj);
 }
 
-$html.= "start";
-
-$sourcedir="/var/www/html/OCR/Origs/";
+$html.= "start</BR>";
+$sub =$_GET['subdir'];
+$sourcedir="/var/www/html/OCR/Origs/". $sub . "/";
+$html.= "Reading:".  $sourcedir;
 $outdir=" /var/www/html/OCR/Out/";
 if (isset($_GET['file'])) {
   $res= split_file($sourcedir . $_GET['file'] ,$_GET['page'],$_GET['subdir'] );

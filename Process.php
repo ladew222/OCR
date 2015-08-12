@@ -1,6 +1,6 @@
 <?php
-$dir=$_GET['subject'];
-$dir='/var/www/html/OCR/Origs/';
+$sub=$_GET['subdir'];
+$dir='/var/www/html/OCR/Origs/'. $sub . "/";
 $files = scandir($dir);
 $x=0;
 $arr = array();

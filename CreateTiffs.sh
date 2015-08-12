@@ -2,7 +2,7 @@
 DIRECTORY=/var/www/html/OCR/Out
 
 
-FILES=/var/www/html/OCR/Out/*.jpg
+FILES=/var/www/html/OCR/Out/b/*.jpg
 x=1;
 for f in $FILES
 do

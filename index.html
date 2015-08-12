@@ -45,16 +45,16 @@ $(document).ready(function(){
    
   
   $("#button").click(function(){
-  
-	
-    $.getJSON("Process.php", function (data) {
+      var subdir= $('#letter').val();
+      var s_str= "Process.php?file=" + $(this).attr('id')+"&subdir="+ subdir;
+    $.getJSON(s_str, function (data) {
 	var trHTML = '';
     	$.each(data, function (i, item) {
 
     trHTML += '<tr data-id="'+ item.content + '" id= \'' + item.content  + '\' data-text="'+ item.html+ '" ><td>Log</td><td>' + item.rank + '</td><td id= \'r_' + item.content  + '\'>' + item.content + '</td><td id= \'s_' + item.content  + '\'>' + '' + '</td><td id= \'t_' + item.content  + '\'>' + item.UID + '</td> <td class="dt" style="display:none">' +  'aaa' + '</td> <td><a target="_blank" href="./Preview/' +   item.content  + '.png"> Line File </a></td></a></td><td><a target="_blank" href="./Origs/' +   item.content  + '.mvg"> Data File </a></td></tr>';
     	});
 	$('#records_table').append(trHTML);
-	$('#blist').append("<li><a href=\"#\" id=\"run\" class=\"btn btn-lg btn-primary\">Run</a></li>" );
+	//$('#blist').append("<li><a href=\"#\" id=\"run\" class=\"btn btn-lg btn-primary\">Run</a></li>" );
                    
 });
 
@@ -68,7 +68,7 @@ $(document).ready(function(){
 		 x=0;
           var subdir= $('#letter').val();
 		  $('#records_table tr').each(function() {
-				var s_str= "Chop.php?file=" + $(this).attr('id')+".JPG"+"&page="+x +"&subdir="+ subdir;
+				var s_str= "Chop.php?file=" + $(this).attr('id')+".JPG"+"&page="+x +"&subdir="+ subdir+"&chop=1";
 				var sel ="#r_" + $(this).attr('id');
 				var sel2 ="#s_" + $(this).attr('id');
 				var sel3 ="#" + $(this).attr('id');
@@ -90,10 +90,39 @@ $(document).ready(function(){
 
 		});
 		$('#status').text("Finished Send");
-		$('#blist').append("<li><a href=\"#\" id=\"lines\" class=\"btn btn-lg btn-primary\">Remove Lines</a></li>" );
+     //   $('#blist').append("<li><a href=\"#\" id=\"d2\" class=\"btn btn-lg btn-primary\">Make Tif</a></li>" );
 
 	});
-	
+    $( document ).delegate( "#run2", "click", function() {
+        $('#status').text("Processing");
+        x=0;
+        var subdir= $('#letter').val();
+        $('#records_table tr').each(function() {
+            var s_str= "Chop.php?file=" + $(this).attr('id')+".JPG"+"&page="+x +"&subdir="+ subdir+"&chop=0";
+            var sel ="#r_" + $(this).attr('id');
+            var sel2 ="#s_" + $(this).attr('id');
+            var sel3 ="#" + $(this).attr('id');
+            x++;
+            var row= $(this);
+            $.getJSON(s_str, function (data) {
+
+                $(sel).text("Fields="+ data.fields);
+                $(this).data('foo', "new value");
+                $(this).attr("data-text", data.html);
+                row.find( ".dt" ).html(data.html) ;
+                $(sel2).text("Records="+ data.records);
+                $(sel3).css("background-color", "#550055");
+                $(sel3).css("color", "#eeeeee");
+                $('#status').text("Split:" + data.records);
+
+
+            });
+
+        });
+        $('#status').text("Finished Send");
+        //   $('#blist').append("<li><a href=\"#\" id=\"d2\" class=\"btn btn-lg btn-primary\">Make Tif</a></li>" );
+
+    });
 	$( document ).delegate( "#lines", "click", function() {
 		 $('#status').text("Line Removal Start");
 		 x=0;
@@ -104,7 +133,7 @@ $(document).ready(function(){
 					$('#status').text("Removed Lines:" +data.count);
   
 				});
-		$('#blist').append("<li><a href=\"#\" id=\"d2\" class=\"btn btn-lg btn-primary\">Make Tif</a></li>" );
+		//$('#blist').append("<li><a href=\"#\" id=\"d2\" class=\"btn btn-lg btn-primary\">Make Tif for OCR</a></li>" );
 
 	});
 	
@@ -119,7 +148,7 @@ $(document).ready(function(){
 					$('#status').text("Tiffs:" +data.count);
   
 				});
-		$('#blist').append("<li><a href=\"#\" id=\"ocr\" class=\"btn btn-lg btn-primary\">OCR</a></li>" );
+		//$('#blist').append("<li><a href=\"#\" id=\"ocr\" class=\"btn btn-lg btn-primary\">OCR</a></li>" );
 
 	});
 	
@@ -144,7 +173,7 @@ $(document).ready(function(){
 
 		});
 		$('#status').text("Finished OCR");
-		$('#blist').append("<li><a href=\"#\" id=\"todb\" class=\"btn btn-lg btn-primary\">Send To DB</a></li>" );
+		//$('#blist').append("<li><a href=\"#\" id=\"todb\" class=\"btn btn-lg btn-primary\">Send OCR To DB</a></li>" );
 
 	});
 
@@ -189,7 +218,13 @@ $(document).ready(function(){
         <ul id="blist">
         <li >
 			 <a href="#" id="button" class="btn btn-lg btn-primary">Load</a>
+
         </li>
+            <li><a href="#" id="run" class="btn btn-lg btn-primary">Chop Up File </a></li>
+            <li><a href="#" id="run2" class="btn btn-lg btn-primary">Chop without file creation </a></li>
+            <li><a href="#" id="d2" class="btn btn-lg btn-primary">Make Tif for OCR use Bash</a></li>
+            <li><a href="#" id="ocr" class="btn btn-lg btn-primary">OCR and Make Text Files</a></li>
+            <li><a href="#" id="todb" class="btn btn-lg btn-primary">Send OCR To DB</a></li>
         </ul>
 	
     </div>
