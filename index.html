@@ -153,10 +153,11 @@ $(document).ready(function(){
 	});
 	
 	$( document ).delegate( "#ocr", "click", function() {
+        var subdir= $('#letter').val();
 		 $('#status').text("OCR Start");
 		 x=0;
 		  $('#records_table tr').each(function() {
-				var s_str= "Ocr2.php?file=" + $(this).attr('id')+"&page="+x;
+				var s_str= "Ocr2.php?file=" + $(this).attr('id')+"&page="+x+"&subdir="+ subdir;
 				var sel ="#r_" + $(this).attr('id');
 				var sel2 ="#s_" + $(this).attr('id');
 				var sel3 ="#" + $(this).attr('id');
@@ -181,7 +182,8 @@ $(document).ready(function(){
 		 $('#status').text("OCR Start");
 		 x=0;
 		  $('#records_table tr').each(function() {
-				var s_str= "ToDB.php?file=" + $(this).attr('id')+"&page="+x;
+                var subdir= $('#letter').val();
+				var s_str= "ToDB.php?file=" + $(this).attr('id')+"&page="+x+"&subdir="+ subdir;
 				var sel ="#r_" + $(this).attr('id');
 				var sel2 ="#s_" + $(this).attr('id');
 				var sel3 ="#" + $(this).attr('id');

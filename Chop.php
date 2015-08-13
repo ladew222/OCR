@@ -358,7 +358,7 @@ function split_file($file,$page,$subdir,$outstr) {
                         $lastline = exec("convert -crop " .$str_crop  . " " .$file . $outdir . $subdir. $new_file);
                         $path_parts = pathinfo($new_file);
                         $sfile= "/OCR/Out/". $subdir . $path_parts['basename'];
-                         $sfile2= "/OCR/Preview/". $subdir . "/".  $fname2 .".png";
+                         $sfile2= "/OCR/Preview/". $subdir .  $fname2 .".png";
                         $html.= "<b style='color:brown'> Outputting Field" .$x . "</b><Br>";
                         $html.= ("Set Crop:". $str_crop);
                         $html.= ("<BR>");

@@ -1,7 +1,7 @@
 <?php
 
 $c=$_GET['page'];
-
+$sub=$_GET['subdir'];
 $html="";
 $mysqli = new mysqli('localhost', 'root', 'gopre222', 'people');
 //echo ("aa");
@@ -10,7 +10,7 @@ $x=0;
 //echo(" start:" . "SELECT * FROM item where page_num=" . $c );
 while ((($row = $result->fetch_assoc()) !== null)  ) {
 
-    $file="/var/www/html/OCR/Text/" . $row["page_name"]  . "_". $row["rec_type"]  . "_" .  $row["page_num"] . "_" .  $row["col_origin"] ."_" . $row["row_origin"] .".txt";
+    $file="/var/www/html/OCR/Text/" . $sub .  "/" . $row["page_name"]  . "_". $row["rec_type"]  . "_" .  $row["page_num"] . "_" .  $row["col_origin"] ."_" . $row["row_origin"] .".txt";
      //echo($file);
     $file_text = mysql_escape_string(file_get_contents("$file", true ));
     $sql = "INSERT INTO people (text) VALUES ('$c', 'A', '$value[0]','$value[1]', '$value[2]','$x')";
